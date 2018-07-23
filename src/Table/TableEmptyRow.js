@@ -8,23 +8,44 @@ const consumeTheme = ThemeConsumer('UITable')
 const TableEmptyRow = ({
   colSpan,
   message,
+  loading,
+  pageSize,
   theme,
-}) => (
-  <tr
-    className={theme.tableRow}
-    tabIndex="0"
-  >
-    <td
-      className={classNames(
-        theme.tableItem,
-        theme.startAlign
-      )}
-      colSpan={colSpan}
+}) => {
+  if (loading) {
+    const x = new Array(pageSize)
+    return x.map(() => (
+      <tr
+        className={theme.tableRow}
+        tabIndex="0"
+      >
+        <td
+          className={classNames(
+            theme.tableItem,
+            theme.loading
+          )}
+          colSpan={colSpan}
+        />
+      </tr>
+    ))
+  }
+  return (
+    <tr
+      className={theme.tableRow}
+      tabIndex="0"
     >
-      <span>{message}</span>
-    </td>
-  </tr>
-)
+      <td
+        className={classNames(
+          theme.tableItem,
+          theme.startAlign
+        )}
+        colSpan={colSpan}
+      >
+        <span>{message}</span>
+      </td>
+    </tr>
+  )
+}
 
 TableEmptyRow.propTypes = {
   /**
@@ -43,9 +64,14 @@ TableEmptyRow.propTypes = {
    * Message which shown when the table row array is empty.
    */
   message: PropTypes.string.isRequired,
+
+  loading: PropTypes.bool,
+  pageSize: PropTypes.number,
 }
 
 TableEmptyRow.defaultProps = {
+  loading: false,
+  pageSize: 5,
   theme: {},
 }
 

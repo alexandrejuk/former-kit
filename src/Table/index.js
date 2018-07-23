@@ -127,10 +127,12 @@ const validateOrderableFunction = (props, propName) => {
   }
 }
 
-const renderEmptyRow = (message, colSpan) => (
+const renderEmptyRow = (message, colSpan, loading, pageSize) => (
   <TableEmptyRow
     colSpan={colSpan}
+    loading={loading}
     message={message}
+    pageSize={pageSize}
   />
 )
 
@@ -262,14 +264,16 @@ class Table extends Component {
     const {
       columns,
       emptyMessage,
+      loading,
       maxColumns,
       rows,
       showAggregationRow,
     } = this.props
 
-    if (isEmpty(rows) && emptyMessage) {
+    if ((isEmpty(rows) && emptyMessage) || loading) {
+      const pageSize = rows ? rows.length : 5
       return {
-        contentRows: renderEmptyRow(emptyMessage, maxColumns),
+        contentRows: renderEmptyRow(emptyMessage, maxColumns, loading, pageSize),
       }
     }
 
@@ -543,6 +547,7 @@ Table.propTypes = {
    * @prop {object} collapse - icon which represents collapse acion in expandable button.
    */
   icons: validateIconsShape,
+  loading: bool,
   /**
    * Number of table columns, all the remaining columns will be dropped in an expandable
    * line if the expandable option is true.
@@ -605,6 +610,7 @@ Table.defaultProps = {
   expandedRows: [],
   headerAlign: 'start',
   icons: {},
+  loading: false,
   maxColumns: 7,
   onExpandRow: null,
   onOrderChange: null,
